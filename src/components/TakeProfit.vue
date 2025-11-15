@@ -1,5 +1,5 @@
 <template>
-  <div
+  <transition-group name="slide" tag="div" class="list"
     :class="[
       'w-full',
       'p-3',
@@ -44,7 +44,7 @@
     <ProjectedProfit
       v-if="store.isProfitAdded"
     />
-  </div>
+  </transition-group>
 </template>
 
 <script lang="ts" setup>

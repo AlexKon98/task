@@ -16,7 +16,7 @@
       </tr>
     </thead>
 
-    <tbody>
+    <transition-group name="slide" tag="tbody" class="list">
       <tr
         v-for="item in store.profits"
         :key="item.id"
@@ -85,6 +85,7 @@
           </label>
 
           <button
+            type="button"
             class="absolute right-0 top-[calc(50%+4px)] -translate-y-1/2"
             @click="() => store.removeProfit(item.id)"
           >
@@ -92,7 +93,7 @@
           </button>
         </td>
       </tr>
-    </tbody>
+    </transition-group>
   </table>
 </template>
 
