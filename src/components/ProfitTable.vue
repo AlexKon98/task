@@ -38,6 +38,7 @@
               class="max-w-6"
               id="form-profit"
               name="form-profit"
+              :style="{ width: inputLength(item.profit) + 'ch' }"
               @update:modelValue="value => store.updateProfit(item.id, value)"
             />
 
@@ -78,6 +79,7 @@
               class="w-6"
               id="form-amount"
               name="form-amount"
+              :style="{ width: inputLength(item.amount) + 'ch' }"
               @update:modelValue="value => store.updateAmount(item.id, value)"
             />
 
@@ -101,4 +103,9 @@
 import { store } from "@/store";
 import CrossIcon from "@/shared/icons/CrossIcon/CrossIcon.vue";
 import NumberInputForm from "@/shared/components/NumberInput/NumberInputForm.vue";
+
+const inputLength = (value: number) => {
+  const length = String(value).length;
+  return Math.min(Math.max(length, 1), 3);
+};
 </script>
