@@ -126,50 +126,50 @@ export const store = reactive({
     this.errorMessage = '';
     this.profits.forEach(p => p.isError = false);
 
-    for (let i = 0; i < this.profits.length; i++) {
-      const p = this.profits[i];
+    if (this.isProfitAdded && this.profits.length) {
+      this.profits.forEach((p, index) => {
+        if (p.profit < 0.01) {
+          p.isError = true;
+          this.errorMessage = 'Minimum value is 0.01%';
+          isValid = false;
+        }
 
-      if (p.profit < 0.01) {
-        p.isError = true;
-        this.errorMessage = 'Minimum value is 0.01%';
+        if (index > 0 && p.profit <= this.profits[index - 1].profit) {
+          p.isError = true;
+          this.profits[index - 1].isError = true;
+          this.errorMessage = 'Each target\'s profit should be greater than the previous one';
+          isValid = false;
+        }
+
+        if (p.price <= 0) {
+          p.isError = true;
+          this.errorMessage = 'Price must be greater than 0';
+          isValid = false;
+        }
+
+        totalProfit += p.profit;
+        totalAmount += p.amount;
+      });
+
+      if (totalProfit > 500) {
+        this.profits.forEach(p => p.isError = true);
+        this.errorMessage = 'Maximum profit sum is 500%';
         isValid = false;
       }
 
-      if (i > 0 && p.profit <= this.profits[i-1].profit) {
-        p.isError = true;
-        this.profits[i-1].isError = true;
-        this.errorMessage = 'Each target\'s profit should be greater than the previous one';
+      if (totalAmount > 100) {
+        this.profits.forEach(p => p.isError = true);
+        const excess = totalAmount - 100;
+        this.errorMessage = `${totalAmount} out of 100% selected. Please decrease by ${excess.toFixed(2)}`;
         isValid = false;
       }
 
-      if (p.price <= 0) {
-        p.isError = true;
-        this.errorMessage = 'Price must be greater than 0';
+      if (totalAmount < 100) {
+        this.profits.forEach(p => p.isError = true);
+        const deficit = 100 - totalAmount;
+        this.errorMessage = `${totalAmount} out of 100% selected. Please increase by ${deficit.toFixed(2)}`;
         isValid = false;
       }
-
-      totalProfit += p.profit;
-      totalAmount += p.amount;
-    }
-
-    if (totalProfit > 500) {
-      this.profits.forEach(p => p.isError = true);
-      this.errorMessage = 'Maximum profit sum is 500%';
-      isValid = false;
-    }
-
-    if (totalAmount > 100) {
-      this.profits.forEach(p => p.isError = true);
-      const excess = totalAmount - 100;
-      this.errorMessage = `${totalAmount} out of 100% selected. Please decrease by ${excess.toFixed(2)}`;
-      isValid = false;
-    }
-
-    if (totalAmount < 100) {
-      this.profits.forEach(p => p.isError = true);
-      const deficit = 100 - totalAmount;
-      this.errorMessage = `${totalAmount} out of 100% selected. Please increase by ${deficit.toFixed(2)}`;
-      isValid = false;
     }
 
     return isValid;
